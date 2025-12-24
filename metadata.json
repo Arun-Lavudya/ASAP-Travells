@@ -1,5 +1,5 @@
 {
-  "name": "Copy of ASAP Travels - Bus Booking Platform",
-  "description": "A high-performance bus booking platform featuring a customer booking portal and a comprehensive admin fleet management dashboard, with integrated Gemini AI for travel assistance.",
+  "name": "ASAP Travels",
+  "description": "Production-grade bus booking platform with AI travel assistance and fleet management.",
   "requestFramePermissions": []
 }

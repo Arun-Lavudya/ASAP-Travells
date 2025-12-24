@@ -1,20 +1,41 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# ASAP Travels 🚌💨
 
-This contains everything you need to run your app locally.
+ASAP Travels is a high-performance, AI-powered bus booking platform. 
 
-View your app in AI Studio: https://ai.studio/apps/drive/1YBB8pvVbWM-1TPBoXp2wsZqUnvR7ydBr
+## ✨ Features
+- **Smart Search**: Find the best routes between cities instantly.
+- **Seat Selection**: Real-time seat map with inventory management.
+- **AI Travel Assistant**: Get route-specific tips powered by Gemini.
+- **Admin Terminal**: Manage fleets, routes, and manual bookings.
 
-## Run Locally
+## 🚀 Getting Started
 
-**Prerequisites:**  Node.js
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. **Build for Production**:
+   ```bash
+   npm run build
+   ```
+
+## 🌐 Deployment (GitHub Pages)
+
+To deploy your site:
+1. Ensure your `homepage` field in `package.json` is updated with your GitHub URL.
+2. Run the deploy command:
+   ```bash
+   npm run deploy
+   ```
+
+## 🛠 Tech Stack
+- **Frontend**: React 18, Tailwind CSS, Lucide Icons
+- **AI**: Google Gemini API
+- **State**: React Hooks & Simulation Layer (Mock DB)

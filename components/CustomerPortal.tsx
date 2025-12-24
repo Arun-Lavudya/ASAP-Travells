@@ -108,8 +108,15 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
   };
 
   const openCalendar = () => {
-    if (dateInputRef.current && 'showPicker' in dateInputRef.current) {
-      dateInputRef.current.showPicker();
+    const input = dateInputRef.current;
+    if (input) {
+      // Fixed: Use type assertion to avoid narrowing input to 'never' in the else block
+      // when TypeScript expects showPicker to be a standard member of HTMLInputElement.
+      if (typeof (input as any).showPicker === 'function') {
+        (input as any).showPicker();
+      } else {
+        input.focus();
+      }
     }
   };
 
@@ -123,8 +130,8 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
           </div>
 
           {view === 'SEARCH' && (
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-black mb-4">Journey Fast. Journey <span className="text-orange-400">ASAP.</span></h1>
+            <div className="text-center animate-fade-in">
+              <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">Journey Fast. Journey <span className="text-orange-400">ASAP.</span></h1>
               <p className="text-indigo-100 mb-10 max-w-xl mx-auto font-medium">Book tickets for your next adventure with zero hassle.</p>
 
               <form onSubmit={handleSearch} className="max-w-5xl mx-auto bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 relative z-[50]">
@@ -176,10 +183,10 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   )}
                 </div>
 
-                {/* DATE FIELD - ENHANCED CALENDAR UI */}
+                {/* DATE FIELD - TRIGGERABLE CALENDAR */}
                 <div 
                   onClick={openCalendar}
-                  className="flex-1 flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-transparent hover:border-indigo-400 focus-within:border-indigo-400 focus-within:bg-white transition-all cursor-pointer group"
+                  className="flex-1 flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-transparent hover:border-indigo-400 transition-all cursor-pointer group"
                 >
                   <Calendar className="text-slate-400 w-5 h-5 group-hover:text-indigo-600 transition-colors" />
                   <div className="text-left flex-1">
@@ -189,8 +196,9 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                       type="date" 
                       min={today}
                       value={date} 
+                      onClick={(e) => e.stopPropagation()} 
                       onChange={e => setDate(e.target.value)} 
-                      className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold cursor-pointer block" 
+                      className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold cursor-pointer" 
                     />
                   </div>
                 </div>
