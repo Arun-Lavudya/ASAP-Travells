@@ -1,7 +1,6 @@
-
 import { Bus, Route, Schedule, Inventory, Booking, User, BusType } from './types';
 
-const STORAGE_KEY = 'ASAP_TRAVELS_DB';
+const STORAGE_KEY = 'ASAP_TRAVELS_DB_V3';
 
 // --- UTILS FOR DYNAMIC DATES ---
 const todayStr = new Date().toISOString().split('T')[0];
@@ -17,27 +16,24 @@ const defaultData = {
     { id: 'u3', name: 'John Doe', email: 'customer@test.com', password: 'password123', role: 'CUSTOMER' }
   ] as User[],
   busTypes: [
-    { id: '1', name: 'Volvo AC Multi-Axle', seats: 40, features: ['AC', 'WiFi', 'Charging', 'Water'] },
-    { id: '2', name: 'Non-AC Sleeper', seats: 30, features: ['Blanket', 'Reading Light'] },
-    { id: '3', name: 'Luxury AC Sleeper', seats: 24, features: ['AC', 'WiFi', 'Snacks', 'Pillow'] }
+    { id: '1', name: 'Scania AC Multi-Axle', seats: 40, features: ['AC', 'WiFi', 'Charging', 'Water', 'CCTV'] },
+    { id: '2', name: 'Non-AC Regular Seater', seats: 36, features: ['Emergency Exit', 'Overhead Rack'] },
+    { id: '3', name: 'Volvo Luxury AC Sleeper', seats: 30, features: ['AC', 'WiFi', 'Blanket', 'Pillow', 'Individual TV'] }
   ] as BusType[],
   buses: [
-    { id: 'b1', plateNumber: 'ASAP-001', typeId: '1', operatorId: 'u1', status: 'ACTIVE' },
-    { id: 'b2', plateNumber: 'ASAP-002', typeId: '3', operatorId: 'u1', status: 'ACTIVE' },
-    { id: 'b3', plateNumber: 'ASAP-003', typeId: '2', operatorId: 'u2', status: 'ACTIVE' }
+    { id: 'b1', plateNumber: 'TS-09-AP-1234', typeId: '1', operatorId: 'u1', status: 'ACTIVE' },
+    { id: 'b2', plateNumber: 'KA-01-BT-5678', typeId: '3', operatorId: 'u1', status: 'ACTIVE' },
+    { id: 'b3', plateNumber: 'TS-07-UC-9012', typeId: '2', operatorId: 'u2', status: 'ACTIVE' }
   ] as Bus[],
   routes: [
-    { id: 'r1', source: 'New York', destination: 'Boston', distance: 350, duration: '4h 30m' },
-    { id: 'r2', source: 'Los Angeles', destination: 'San Francisco', distance: 600, duration: '6h 15m' },
-    { id: 'r3', source: 'Chicago', destination: 'Detroit', distance: 450, duration: '5h 00m' },
-    { id: 'r4', source: 'Seattle', destination: 'Portland', distance: 280, duration: '3h 15m' },
-    { id: 'r5', source: 'Boston', destination: 'New York', distance: 350, duration: '4h 45m' }
+    { id: 'r1', source: 'Hyderabad', destination: 'Banglore', distance: 575, duration: '9h 15m' },
+    { id: 'r2', source: 'Banglore', destination: 'Hyderabad', distance: 575, duration: '9h 30m' }
   ] as Route[],
   schedules: [
-    { id: 's1', busId: 'b1', routeId: 'r1', departureTime: `${todayStr}T08:00:00`, arrivalTime: `${todayStr}T12:30:00`, fare: 45.00 },
-    { id: 's2', busId: 'b2', routeId: 'r1', departureTime: `${todayStr}T14:00:00`, arrivalTime: `${todayStr}T18:30:00`, fare: 65.00 },
-    { id: 's3', busId: 'b3', routeId: 'r2', departureTime: `${tomorrowStr}T09:00:00`, arrivalTime: `${tomorrowStr}T15:15:00`, fare: 55.00 },
-    { id: 's4', busId: 'b1', routeId: 'r5', departureTime: `${tomorrowStr}T07:30:00`, arrivalTime: `${tomorrowStr}T12:15:00`, fare: 42.00 }
+    { id: 's1', busId: 'b1', routeId: 'r1', departureTime: `${todayStr}T21:00:00`, arrivalTime: `${tomorrowStr}T06:15:00`, fare: 1250 },
+    { id: 's2', busId: 'b2', routeId: 'r1', departureTime: `${todayStr}T22:30:00`, arrivalTime: `${tomorrowStr}T07:45:00`, fare: 1850 },
+    { id: 's3', busId: 'b3', routeId: 'r2', departureTime: `${todayStr}T20:30:00`, arrivalTime: `${tomorrowStr}T06:00:00`, fare: 850 },
+    { id: 's4', busId: 'b1', routeId: 'r2', departureTime: `${tomorrowStr}T21:15:00`, arrivalTime: `${tomorrowStr}T06:30:00`, fare: 1300 }
   ] as Schedule[],
   inventory: [] as Inventory[],
   bookings: [] as Booking[]
@@ -92,7 +88,7 @@ export const APIService = {
     await new Promise(r => setTimeout(r, 800));
     const exists = db.users.some((u: User) => u.email === email);
     if (exists) throw new Error("A user with this email already exists");
-    
+
     const newUser: User = {
       id: `u-${Date.now()}`,
       name,
@@ -100,17 +96,17 @@ export const APIService = {
       password,
       role: 'CUSTOMER'
     };
-    
+
     db.users.push(newUser);
     saveToStorage();
-    
+
     const { password: _, ...userWithoutPassword } = newUser;
     return userWithoutPassword as User;
   },
 
   getRoutes: async () => [...db.routes],
   getBusTypes: async () => [...db.busTypes],
-  
+
   getAvailableLocations: async () => {
     const locations = new Set<string>();
     db.routes.forEach((r: Route) => {
@@ -221,12 +217,12 @@ export const APIService = {
   searchBuses: async (source: string, dest: string, date: string) => {
     const sTerm = source.toLowerCase().trim();
     const dTerm = dest.toLowerCase().trim();
-    
+
     // Find matching routes
     const routeIds = db.routes
       .filter((r: Route) => r.source.toLowerCase().trim() === sTerm && r.destination.toLowerCase().trim() === dTerm)
       .map((r: Route) => r.id);
-    
+
     // Find schedules for those routes on that date
     const matched = db.schedules.filter((s: Schedule) => {
       const matchesRoute = routeIds.includes(s.routeId);
@@ -248,7 +244,7 @@ export const APIService = {
   createBooking: async (bookingData: Omit<Booking, 'id' | 'bookedAt' | 'status'>) => {
     const available = db.inventory.filter((i: Inventory) => i.scheduleId === bookingData.scheduleId && bookingData.seats.includes(i.seatNumber) && i.status === 'AVAILABLE');
     if (available.length !== bookingData.seats.length) throw new Error("Some selected seats are no longer available.");
-    
+
     const booking: Booking = { ...bookingData, id: `bk-${Date.now()}`, bookedAt: new Date().toISOString(), status: 'CONFIRMED' };
     db.inventory.forEach((i: Inventory) => {
       if (i.scheduleId === bookingData.scheduleId && bookingData.seats.includes(i.seatNumber)) {

@@ -12,8 +12,8 @@ interface CustomerPortalProps {
 
 const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }) => {
   const [view, setView] = useState<'SEARCH' | 'BOOKINGS'>('SEARCH');
-  const [source, setSource] = useState('New York');
-  const [destination, setDestination] = useState('Boston');
+  const [source, setSource] = useState('Hyderabad');
+  const [destination, setDestination] = useState('Banglore');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [results, setResults] = useState<any[]>([]);
   const [allLocations, setAllLocations] = useState<string[]>([]);
@@ -22,11 +22,11 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<any | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [bookingStep, setBookingStep] = useState(0); 
+  const [bookingStep, setBookingStep] = useState(0);
   const [aiMessage, setAiMessage] = useState<string>('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [myBookings, setMyBookings] = useState<any[]>([]);
-  
+
   const dateInputRef = useRef<HTMLInputElement>(null);
   const today = new Date().toISOString().split('T')[0];
 
@@ -65,11 +65,11 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
     setHasSearched(true);
     setSourceSuggestions([]);
     setDestSuggestions([]);
-    
+
     const data = await APIService.searchBuses(source.trim(), destination.trim(), date);
     setResults(data);
     setBookingStep(0);
-    
+
     if (data.length > 0) {
       setIsAiLoading(true);
       try {
@@ -141,11 +141,11 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                     <MapPin className="text-slate-400 w-5 h-5" />
                     <div className="text-left flex-1">
                       <label className="text-[10px] font-bold text-slate-400 uppercase">From</label>
-                      <input 
-                        value={source} 
-                        onChange={e => handleSourceChange(e.target.value)} 
+                      <input
+                        value={source}
+                        onChange={e => handleSourceChange(e.target.value)}
                         onFocus={() => handleSourceChange(source)}
-                        className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold" 
+                        className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold"
                         placeholder="Departure City"
                       />
                     </div>
@@ -153,7 +153,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   {sourceSuggestions.length > 0 && (
                     <div className="absolute left-0 right-0 top-full mt-2 bg-white border rounded-xl shadow-2xl z-[60] overflow-hidden">
                       {sourceSuggestions.map(loc => (
-                        <button key={loc} type="button" onClick={() => {setSource(loc); setSourceSuggestions([]);}} className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b last:border-0 font-bold text-slate-700">{loc}</button>
+                        <button key={loc} type="button" onClick={() => { setSource(loc); setSourceSuggestions([]); }} className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b last:border-0 font-bold text-slate-700">{loc}</button>
                       ))}
                     </div>
                   )}
@@ -165,11 +165,11 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                     <MapPin className="text-slate-400 w-5 h-5" />
                     <div className="text-left flex-1">
                       <label className="text-[10px] font-bold text-slate-400 uppercase">To</label>
-                      <input 
-                        value={destination} 
-                        onChange={e => handleDestChange(e.target.value)} 
+                      <input
+                        value={destination}
+                        onChange={e => handleDestChange(e.target.value)}
                         onFocus={() => handleDestChange(destination)}
-                        className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold" 
+                        className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold"
                         placeholder="Destination"
                       />
                     </div>
@@ -177,28 +177,28 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   {destSuggestions.length > 0 && (
                     <div className="absolute left-0 right-0 top-full mt-2 bg-white border rounded-xl shadow-2xl z-[60] overflow-hidden">
                       {destSuggestions.map(loc => (
-                        <button key={loc} type="button" onClick={() => {setDestination(loc); setDestSuggestions([]);}} className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b last:border-0 font-bold text-slate-700">{loc}</button>
+                        <button key={loc} type="button" onClick={() => { setDestination(loc); setDestSuggestions([]); }} className="w-full text-left px-4 py-3 text-sm hover:bg-indigo-50 border-b last:border-0 font-bold text-slate-700">{loc}</button>
                       ))}
                     </div>
                   )}
                 </div>
 
                 {/* DATE FIELD - TRIGGERABLE CALENDAR */}
-                <div 
+                <div
                   onClick={openCalendar}
                   className="flex-1 flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl border border-transparent hover:border-indigo-400 transition-all cursor-pointer group"
                 >
                   <Calendar className="text-slate-400 w-5 h-5 group-hover:text-indigo-600 transition-colors" />
                   <div className="text-left flex-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Date</label>
-                    <input 
+                    <input
                       ref={dateInputRef}
-                      type="date" 
+                      type="date"
                       min={today}
-                      value={date} 
-                      onClick={(e) => e.stopPropagation()} 
-                      onChange={e => setDate(e.target.value)} 
-                      className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold cursor-pointer" 
+                      value={date}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={e => setDate(e.target.value)}
+                      className="w-full bg-transparent border-none focus:outline-none text-slate-900 font-bold cursor-pointer"
                     />
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
             <>
               {!hasSearched ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {[ { icon: ShieldCheck, title: "Secure Booking" }, { icon: Zap, title: "Direct Routes" }, { icon: Star, title: "Premium Seats" } ].map((item, i) => (
+                  {[{ icon: ShieldCheck, title: "Secure Booking" }, { icon: Zap, title: "Direct Routes" }, { icon: Star, title: "Premium Seats" }].map((item, i) => (
                     <div key={i} className="bg-white p-8 rounded-[2rem] border shadow-sm text-center hover:scale-105 transition-all">
                       <div className="bg-indigo-50 w-16 h-16 rounded-3xl mx-auto mb-4 flex items-center justify-center text-indigo-600"><item.icon className="w-8 h-8" /></div>
                       <h3 className="font-black text-slate-900">{item.title}</h3>
@@ -233,28 +233,30 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   </div>
                   {results.length === 0 ? (
                     <div className="bg-white p-12 rounded-[2rem] border text-center shadow-sm animate-fade-in">
-                       <Search className="w-12 h-12 text-slate-100 mx-auto mb-4" />
-                       <p className="text-slate-400 font-bold">No buses found for this selection.</p>
+                      <MapPin className="w-12 h-12 text-orange-200 mx-auto mb-4" />
+                      <h3 className="text-xl font-black text-slate-900 mb-2">We're not there yet!</h3>
+                      <p className="text-slate-500 font-medium">Currently, we only operate between <span className="text-indigo-600">Hyderabad</span> and <span className="text-indigo-600">Banglore</span>.</p>
+                      <p className="text-slate-400 text-sm mt-4 italic">Expanding to more cities very soon. Stay tuned!</p>
                     </div>
                   ) : results.map(service => (
                     <div key={service.id} className="bg-white p-8 rounded-[2rem] border shadow-sm hover:shadow-xl transition-all flex flex-col md:flex-row justify-between items-center gap-8 group animate-fade-in">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                           <span className="bg-indigo-50 text-indigo-600 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-indigo-100">{service.type.name}</span>
-                           <span className="text-xs text-slate-300 font-bold"># {service.bus.plateNumber}</span>
+                          <span className="bg-indigo-50 text-indigo-600 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-indigo-100">{service.type.name}</span>
+                          <span className="text-xs text-slate-300 font-bold"># {service.bus.plateNumber}</span>
                         </div>
                         <h3 className="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors capitalize">
                           {service.route.source} <ArrowRight className="inline-block w-5 h-5 mx-1 text-slate-300" /> {service.route.destination}
                         </h3>
                         <div className="flex items-center gap-8 mt-6 text-sm font-black">
-                          <div><div className="text-[10px] text-slate-400 uppercase mb-1 font-bold">Departure</div>{new Date(service.departureTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                          <div><div className="text-[10px] text-slate-400 uppercase mb-1 font-bold">Departure</div>{new Date(service.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                           <div className="flex-1 h-[1px] bg-slate-100 relative min-w-[80px]"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 text-[9px] text-slate-300 italic border rounded-full font-bold">{service.route.duration}</div></div>
-                          <div className="text-right"><div className="text-[10px] text-slate-400 uppercase mb-1 font-bold">Arrival</div>{new Date(service.arrivalTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                          <div className="text-right"><div className="text-[10px] text-slate-400 uppercase mb-1 font-bold">Arrival</div>{new Date(service.arrivalTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                       </div>
                       <div className="text-center md:text-right border-t md:border-t-0 md:border-l pt-6 md:pt-0 md:pl-10 border-slate-100 w-full md:w-52">
-                        <p className="text-4xl font-black text-indigo-600">${service.fare}</p>
-                        <button onClick={() => {setSelectedSchedule(service); setBookingStep(1);}} className="w-full mt-4 bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-lg hover:shadow-indigo-200">Select Seats</button>
+                        <p className="text-4xl font-black text-indigo-600">₹{service.fare}</p>
+                        <button onClick={() => { setSelectedSchedule(service); setBookingStep(1); }} className="w-full mt-4 bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-indigo-600 transition-all shadow-lg hover:shadow-indigo-200">Select Seats</button>
                         <p className="text-[10px] font-black text-orange-500 mt-3 uppercase tracking-widest">{service.availableSeats} Available</p>
                       </div>
                     </div>
@@ -265,9 +267,9 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   <button onClick={() => setBookingStep(0)} className="text-indigo-600 font-black text-xs uppercase tracking-widest mb-8 flex items-center gap-2">← Back to Results</button>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                     <div className="flex flex-col items-center bg-slate-50 p-10 rounded-[3.5rem] border-4 border-slate-100">
-                       <div className="grid grid-cols-4 gap-4">
-                        {Array.from({length: selectedSchedule.type.seats}).map((_, i) => (
-                          <button key={i} onClick={() => toggleSeat(i+1)} className={`w-12 h-12 rounded-xl text-xs font-black transition-all ${selectedSeats.includes(i+1) ? 'bg-indigo-600 text-white shadow-xl' : 'bg-white border text-slate-600 hover:border-indigo-300'}`}>{i+1}</button>
+                      <div className="grid grid-cols-4 gap-4">
+                        {Array.from({ length: selectedSchedule.type.seats }).map((_, i) => (
+                          <button key={i} onClick={() => toggleSeat(i + 1)} className={`w-12 h-12 rounded-xl text-xs font-black transition-all ${selectedSeats.includes(i + 1) ? 'bg-indigo-600 text-white shadow-xl' : 'bg-white border text-slate-600 hover:border-indigo-300'}`}>{i + 1}</button>
                         ))}
                       </div>
                     </div>
@@ -275,10 +277,10 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                       <div className="bg-slate-50 p-8 rounded-3xl border">
                         <h4 className="font-black text-slate-900 mb-4 flex items-center gap-2"><UserIcon className="w-4 h-4 text-indigo-600" /> Traveler Info</h4>
                         {user ? (
-                           <div className="p-4 bg-white rounded-2xl border border-indigo-100">
-                             <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Signed in as</p>
-                             <p className="font-black text-indigo-900">{user.name}</p>
-                           </div>
+                          <div className="p-4 bg-white rounded-2xl border border-indigo-100">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Signed in as</p>
+                            <p className="font-black text-indigo-900">{user.name}</p>
+                          </div>
                         ) : (
                           <button onClick={onLoginRequired} className="w-full bg-indigo-50 text-indigo-600 font-black py-4 rounded-2xl border-2 border-dashed border-indigo-200 hover:bg-indigo-100">Login to Continue</button>
                         )}
@@ -286,7 +288,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                       <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl">
                         <div className="flex justify-between font-bold text-slate-400 mb-2 uppercase text-[10px]"><span>Seats:</span><span>{selectedSeats.length} Selected</span></div>
                         <div className="flex flex-wrap gap-2 mb-6">{selectedSeats.map(s => <span key={s} className="bg-white/10 px-3 py-1 rounded-lg text-xs font-black">{s}</span>)}</div>
-                        <div className="flex justify-between items-end text-3xl font-black border-t border-white/10 pt-6"><span>Total:</span><span className="text-orange-400">${selectedSeats.length * selectedSchedule.fare}</span></div>
+                        <div className="flex justify-between items-end text-3xl font-black border-t border-white/10 pt-6"><span>Total:</span><span className="text-orange-400">₹{selectedSeats.length * selectedSchedule.fare}</span></div>
                         <button onClick={() => user ? handleBook() : onLoginRequired()} disabled={selectedSeats.length === 0} className="w-full mt-8 bg-orange-500 py-5 rounded-2xl font-black text-white hover:bg-orange-600 transition-all shadow-xl disabled:bg-slate-700 uppercase tracking-widest">Pay & Book Now</button>
                       </div>
                     </div>
@@ -297,14 +299,14 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                   <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8"><ShieldCheck className="w-12 h-12" /></div>
                   <h2 className="text-4xl font-black text-slate-900 mb-3">Booking Success!</h2>
                   <p className="text-slate-500 mb-10">Ticket for #{selectedSeats.join(', ')} is confirmed.</p>
-                  <button onClick={() => {setHasSearched(false); setBookingStep(0); setSelectedSeats([]);}} className="bg-indigo-600 text-white font-black px-12 py-4 rounded-2xl">Book Another Trip</button>
+                  <button onClick={() => { setHasSearched(false); setBookingStep(0); setSelectedSeats([]); }} className="bg-indigo-600 text-white font-black px-12 py-4 rounded-2xl">Book Another Trip</button>
                 </div>
               )}
             </>
           ) : (
             <div className="space-y-4">
               {myBookings.length === 0 ? (
-                 <div className="bg-white p-12 rounded-[2rem] border text-center text-slate-400 italic">No bookings found.</div>
+                <div className="bg-white p-12 rounded-[2rem] border text-center text-slate-400 italic">No bookings found.</div>
               ) : myBookings.map((bk: any) => (
                 <div key={bk.id} className="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center group hover:border-indigo-200 transition-all animate-fade-in">
                   <div className="flex gap-4 items-center">
@@ -315,7 +317,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-black text-slate-900">${bk.totalAmount}</p>
+                    <p className="text-xl font-black text-slate-900">₹{bk.totalAmount}</p>
                     <p className="text-[10px] font-black text-slate-400 uppercase">{bk.seats.length} Seats</p>
                   </div>
                 </div>
@@ -329,7 +331,7 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
             <h3 className="font-black flex items-center gap-2 mb-6 text-indigo-600 uppercase text-[10px] tracking-widest"><Bot className="w-5 h-5" /> Travel Assistant</h3>
             <div className="text-sm text-slate-600 leading-relaxed font-medium min-h-[60px]">
               {isAiLoading ? (
-                 <div className="flex items-center gap-2 text-slate-300"><div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" /> Analyzing route...</div>
+                <div className="flex items-center gap-2 text-slate-300"><div className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" /> Analyzing route...</div>
               ) : (
                 aiMessage ? (
                   <div className="bg-indigo-50 p-5 rounded-2xl border border-indigo-100 relative animate-fade-in">
@@ -342,14 +344,14 @@ const CustomerPortal: React.FC<CustomerPortalProps> = ({ user, onLoginRequired }
               )}
             </div>
             <div className="mt-10 pt-10 border-t border-slate-50 space-y-5">
-               <div className="flex items-center gap-4 group cursor-pointer">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-all"><Zap className="w-5 h-5" /></div>
-                  <div><p className="text-xs font-black text-slate-900">Live Track</p><p className="text-[10px] text-slate-400 font-bold uppercase">GPS Ready</p></div>
-               </div>
-               <div className="flex items-center gap-4 group cursor-pointer">
-                  <div className="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-all"><ShieldCheck className="w-5 h-5" /></div>
-                  <div><p className="text-xs font-black text-slate-900">Verified</p><p className="text-[10px] text-slate-400 font-bold uppercase">Safe Journey</p></div>
-               </div>
+              <div className="flex items-center gap-4 group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-all"><Zap className="w-5 h-5" /></div>
+                <div><p className="text-xs font-black text-slate-900">Live Track</p><p className="text-[10px] text-slate-400 font-bold uppercase">GPS Ready</p></div>
+              </div>
+              <div className="flex items-center gap-4 group cursor-pointer">
+                <div className="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-all"><ShieldCheck className="w-5 h-5" /></div>
+                <div><p className="text-xs font-black text-slate-900">Verified</p><p className="text-[10px] text-slate-400 font-bold uppercase">Safe Journey</p></div>
+              </div>
             </div>
           </div>
         </div>
